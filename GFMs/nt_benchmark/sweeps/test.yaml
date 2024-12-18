@@ -1,0 +1,26 @@
+program: main_nt.py
+method: grid
+parameters:
+  learning_rate:
+    values: [1e-5]
+  model_type:
+    values: ["hyenadna_max_pool"]
+  num_train_epochs:
+    value: 100
+  batch_size:
+    value: 32
+  warmup_steps:
+    value: 0
+  weight_decay:
+    value: 0
+  fold_number:
+    values: [0]
+  weight_type:
+    values: ["random"]
+  lr_scheduler_type:
+    value: "cosine"
+  dataset_base_path:
+    value: "/home/data/evaluation/genomics/"
+  dataset_name:
+    values:
+      ["enhancers"]

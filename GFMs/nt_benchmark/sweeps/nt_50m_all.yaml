@@ -1,0 +1,43 @@
+program: main_nt.py
+method: grid
+parameters:
+  learning_rate:
+    values: [1e-5, 3e-5, 5e-5, 8e-5, 1e-4, 3e-4]
+  model_type:
+    values: ["nt_50m_max_pool"]
+  num_train_epochs:
+    value: 100
+  batch_size:
+    value: 32
+  warmup_steps:
+    value: 0
+  weight_decay:
+    value: 0
+  fold_number:
+    values: [0, 5, 9]
+  weight_type:
+    values: ["random", "pretrained"]
+  lr_scheduler_type:
+    value: "cosine"
+  dataset_base_path:
+    value: "/home/data/evaluation/genomics/"
+  dataset_name:
+    values:
+      ["enhancers",
+      "enhancers_types",
+      "H3",
+      "H3K14ac",
+      "H3K36me3",
+      "H3K4me1",
+      "H3K4me2",
+      "H3K4me3",
+      "H3K79me3",
+      "H3K9ac",
+      "H4",
+      "H4ac",
+      "promoter_all",
+      "promoter_no_tata",
+      "promoter_tata",
+      "splice_sites_acceptors",
+      "splice_sites_donors",
+      "splice_sites_all"]

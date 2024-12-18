@@ -1,0 +1,11 @@
+program: main_biotype.py
+method: grid
+parameters:
+  tokenizer:
+    values: ["char"]
+  pretrained:
+    values: [false]
+  model_name:
+    values: ["nt_50m", "dnabertv2", "genalm", "nt_50m"]
+  embedding_dim:
+    values: [-1]

@@ -1,0 +1,13 @@
+program: main_biotype.py
+method: grid
+parameters:
+  pool:
+    values: ["max"]
+  tokenizer:
+    values: ["default"]
+  pretrained:
+    values: [false, true]
+  model_name:
+    values: ["mistral", "nt_500m", "nt_50m", "dnabertv2", "genalm", "hyenadna", "llama"]
+  embedding_dim:
+    values: [-1]
