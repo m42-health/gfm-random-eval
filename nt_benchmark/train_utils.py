@@ -1,10 +1,10 @@
 """Implements the training logic for NT Benchmark."""
 
 import numpy as np
-from config import Config
+from nt_benchmark.config import Config
 from datasets import Dataset
-from ft_datasets import get_datasets, nt_benchmarks
-from models import load_model_tokenizer
+from nt_benchmark.ft_datasets import get_datasets, nt_benchmarks
+from nt_benchmark.models import load_model_tokenizer
 from sklearn.metrics import f1_score, matthews_corrcoef
 from transformers import Trainer, TrainingArguments
 

@@ -1,6 +1,6 @@
 """Implementation of the dataset creation logic for the NT Benchmark."""
 
-from config import Config
+from nt_benchmark.config import Config
 from datasets import Dataset, load_dataset
 from sklearn.model_selection import KFold
 from transformers import PreTrainedTokenizer

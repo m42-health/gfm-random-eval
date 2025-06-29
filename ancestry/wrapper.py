@@ -11,7 +11,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 from xgboost import XGBClassifier
 
-from biotype.utils import load_model_and_tokenizer
+from biotype.models import load_model_and_tokenizer
 
 
 def extract_decoder_hidden_states(
@@ -349,7 +349,7 @@ class AncestrySupervisedWrapper:
 
 
 if __name__ == "__main__":
-    from dataset import load_ancestry_dataset
+    from ancestry.dataset import load_ancestry_dataset
 
     dataset_dict = load_ancestry_dataset()
     tokenizer_type = "default"

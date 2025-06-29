@@ -239,10 +239,8 @@ def load_mistral(  # noqa
     tokenizer_type: str,  # noqa
     embedding_dim: int = -1,
 ) -> tuple[AutoModelForCausalLM, PreTrainedTokenizer, int]:
-    model_path = (
-        "/home/models_gfm/variant_paper/mistral/"
-        "weighed-mistral-500m-w100-all-hg1000-character-4096-train_small-shift-50-rc-1e-in9s5m4k"
-    )
+    # TODO: Add path to your local Mistral model
+    model_path = "TODO_ADD_MISTRAL_MODEL_PATH"
     model_config = AutoConfig.from_pretrained(model_path, trust_remote_code=True)
     model_config.use_cache = False
     if pretrained:

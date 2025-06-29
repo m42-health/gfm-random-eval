@@ -93,15 +93,20 @@ def compute_cosine_similarities(
     return results
 
 
-def run_mutation_experiments() -> None:
+def run_mutation_experiments(ref_genome_path: str, output_dir: str = "./embeddings/") -> None:
     """Run mutation-based sensitivity experiments.
 
     This function handles the mutation augmentation process by processing reference sequences,
     generating mutated sequences with varying numbers of mutations, computing embeddings using
     different models, and aggregating cosine similarity scores.
 
+    Args:
+        ref_genome_path (str): Path to the reference genome file.
+        output_dir (str): Directory to save output files. Defaults to "./embeddings/".
+
     """
-    ref_sequences = sample_sequences_from_genome()
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
+    ref_sequences = sample_sequences_from_genome(ref_genome_path)
     transform_vals = [1, 64, 128, 256, 512, 1024]
 
     results = {
@@ -137,10 +142,10 @@ def run_mutation_experiments() -> None:
                         scores[pooling],
                     )
 
-    finalize_and_save_results(results)
+    finalize_and_save_results(results, output_dir)
 
 
-def finalize_and_save_results(results: dict) -> None:
+def finalize_and_save_results(results: dict, output_dir: str = "./embeddings/") -> None:
     """Finalize results by averaging and save to files.
 
     This method handles both mutation and transform results. If an augmentation type is provided,
@@ -148,8 +153,10 @@ def finalize_and_save_results(results: dict) -> None:
 
     Args:
         results: The results dictionary containing mutation scores.
+        output_dir: Directory to save output files.
 
     """
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
     print("Mutation results:", results)
     transform_vals = [1, 64, 128, 256, 512, 1024]
 
@@ -165,11 +172,21 @@ def finalize_and_save_results(results: dict) -> None:
                 else:
                     results[model_name][pooling][val] = None
 
-        filename = f"./embeddings-mistral-test/{model_name}_mutation_results.pkl"
+        filename = f"{output_dir}/{model_name}_mutation_results.pkl"
 
         with Path(filename).open("wb") as f:
             pickle.dump(results[model_name], f)
 
 
 if __name__ == "__main__":
-    run_mutation_experiments()
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Run mutation sensitivity experiments")
+    parser.add_argument("--ref_genome_path", type=str, 
+                       default="GCA_000001405.15_GRCh38_no_alt_plus_hs38d1_analysis_set.fna",
+                       help="Path to the reference genome file")
+    parser.add_argument("--output_dir", type=str, default="./embeddings/",
+                       help="Directory to save output files")
+    
+    args = parser.parse_args()
+    run_mutation_experiments(args.ref_genome_path, args.output_dir)

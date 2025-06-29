@@ -2,9 +2,9 @@
 
 import torch.nn as nn
 import transformers
-from config import Config
-from ft_datasets import nt_benchmarks
-from max_pool_wrapper import MaxPoolWrapper
+from nt_benchmark.config import Config
+from nt_benchmark.ft_datasets import nt_benchmarks
+from nt_benchmark.max_pool_wrapper import MaxPoolWrapper
 from transformers import (
     AutoConfig,
     AutoModel,
@@ -182,10 +182,7 @@ def load_dnabert_max_pool(config: Config) -> tuple[nn.Module, PreTrainedTokenize
 
 
 def load_mistral_max_pool(config: Config) -> tuple[nn.Module, PreTrainedTokenizer]:  # noqa
-    model_path = (
-        "/models_gfm/variant_paper/mistral/"
-        "weighed-mistral-500m-w100-all-hg1000-character-4096-train_small-shift-50-rc-1e-in9s5m4k"
-    )
+    model_path = "TODO_ADD_MISTRAL_MODEL_PATH"
     model_config = AutoConfig.from_pretrained(model_path, trust_remote_code=True)
     model_config.use_cache = False
 

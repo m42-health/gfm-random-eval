@@ -16,7 +16,7 @@ from transformers import AutoModel, PreTrainedTokenizer
 from datasets import load_dataset
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__name__), "..")))
-from models import load_model_and_tokenizer
+from biotype.models import load_model_and_tokenizer
 
 import wandb
 
@@ -34,7 +34,8 @@ biotypes_of_interest = [
 
 @torch.no_grad()
 def generate_embedding(
-    model: AutoModel, tokenizer: PreTrainedTokenizer, genes_df: pd.DataFrame
+    model: AutoModel, tokenizer: PreTrainedTokenizer, genes_df: pd.DataFrame, 
+    model_name: str, max_length: int
 ) -> list[np.ndarray]:
     """Generate embeddings for the given biotype sequences.
 
@@ -101,29 +102,24 @@ if __name__ == "__main__":
         pretrained = wandb.config.pretrained
         tokenizer_type = wandb.config.tokenizer
         embedding_dim = wandb.config.embedding_dim
-        use_local_data = wandb.config.use_local_data
     else:
         run = None
-        model_name = "caduceus"
+        model_name = "hyenadna"
         pretrained = False
         tokenizer_type = "char"
         embedding_dim = 4096
-        use_local_data = False
         print(f"Model Name: {model_name}, Pretrained: {pretrained}, Tokenizer: {tokenizer_type}")
 
     model, tokenizer, max_length = load_model_and_tokenizer(
         model_name, pretrained, tokenizer_type, embedding_dim
     )
 
-    if use_local_data:
-        genes_df = pd.read_csv("../data/biotypes.csv")
-    else:
-        dataset = load_dataset("m42-health/biotypes", token=True)
-        genes_df = dataset["train"].to_pandas()
+    dataset = load_dataset("m42-health/biotypes", token=True)
+    genes_df = dataset["train"].to_pandas()
 
     print(f"Number of samples: {len(genes_df)}")
 
-    embedding_list = generate_embedding(model, tokenizer, genes_df)
+    embedding_list = generate_embedding(model, tokenizer, genes_df, model_name, max_length)
 
     genes_df["embeddings"] = embedding_list
 

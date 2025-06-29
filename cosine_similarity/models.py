@@ -1,4 +1,4 @@
-from tokenizers_impl import CharacterTokenizerLlama
+from character_tokenizer import CharacterTokenizer
 from transformers import (
     AutoConfig,
     AutoModel,
@@ -108,7 +108,8 @@ def load_hyenadna(pretrained: bool) -> tuple[AutoModel, AutoTokenizer, int]:  # 
 
 
 def load_mistral(pretrained: bool) -> tuple[AutoModel, AutoTokenizer, int]:  # noqa
-    model_path = "/models_gfm/variant_paper/mistral/weighed-mistral-500m-w100-all-hg1000-character-4096-train_small-shift-50-rc-1e-in9s5m4k"
+    # TODO: Add path to your local Mistral model
+    model_path = "TODO_ADD_MISTRAL_MODEL_PATH"
     model_config = AutoConfig.from_pretrained(model_path, trust_remote_code=True)
     model_config.use_cache = False
     if pretrained:
@@ -119,7 +120,7 @@ def load_mistral(pretrained: bool) -> tuple[AutoModel, AutoTokenizer, int]:  # n
         )
     else:
         model = MistralModel(config=model_config)
-    tokenizer = CharacterTokenizerLlama(characters=list("DNATGC"), model_max_length=None)
+    tokenizer = CharacterTokenizer(characters=list("DNATGC"), model_max_length=None)
     tokenizer.pad_token_id = 9
     tokenizer.eos_token_id = 10
     tokenizer.bos_token_id = 11

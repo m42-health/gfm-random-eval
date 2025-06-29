@@ -32,7 +32,6 @@ supported_pooling = {
     "nt_500m": ["cls", "max", "avg"],
     "dnabertv2": ["cls", "max", "avg"],
     "hyenadna": ["last", "max", "avg"],
-    "mistral": ["last", "max", "avg"],
     "genalm": ["cls", "max", "avg"],
     "caduceus": ["last", "max", "avg"],
 }
@@ -42,11 +41,10 @@ MODEL_NAMES = [
     "nt_500m",
     "dnabertv2",
     "hyenadna",
-    "mistral",
+    # "mistral",  
     "genalm",
-    "caduceus",
+    # "caduceus", 
 ]
-
 
 def chunk_sequence(sequence: str, chunk_length: int = 1024) -> list[dict]:
     """Chunk the sequence into parts with specified fixed length.
@@ -67,16 +65,22 @@ def chunk_sequence(sequence: str, chunk_length: int = 1024) -> list[dict]:
     return chunks
 
 
-def load_ref_genome() -> pysam.FastaFile:
+def load_ref_genome(ref_genome_path: str) -> pysam.FastaFile:
     """Load the reference genome.
 
-    Returns
-    -------
-    pysam.FastaFile
-        The reference genome.
+    Args:
+        ref_genome_path (str): Path to the reference genome file.
+
+    Returns:
+        pysam.FastaFile: The reference genome.
+        
+    Raises:
+        FileNotFoundError: If the reference genome file doesn't exist.
 
     """
-    ref_genome_path = "/home/data/pretrain/genomics/hg38_reference/GCA_000001405.15_GRCh38_no_alt_plus_hs38d1_analysis_set.fna"
+    from pathlib import Path
+    if not Path(ref_genome_path).exists():
+        raise FileNotFoundError(f"Reference genome file not found: {ref_genome_path}")
     return pysam.FastaFile(ref_genome_path)
 
 
@@ -142,10 +146,11 @@ def sample_valid_sequence(
     raise ValueError("Failed to sample a valid sequence after multiple attempts.")
 
 
-def sample_sequences_from_genome(sequence_length: int = 1024) -> list[tuple[str, int, str]]:
+def sample_sequences_from_genome(ref_genome_path: str, sequence_length: int = 1024) -> list[tuple[str, int, str]]:
     """Sample sequences from the genome.
 
     Args:
+        ref_genome_path (str): Path to the reference genome file.
         sequence_length (int, optional): The length of the sequence to sample. Defaults to 1024.
 
     Returns:
@@ -156,10 +161,19 @@ def sample_sequences_from_genome(sequence_length: int = 1024) -> list[tuple[str,
     start_positions = [1_000_000, 2_000_000, 5_000_000, 10_000_000, 20_000_000]
     sampled_sequences = []
 
-    ref_genome = load_ref_genome()
+    ref_genome = load_ref_genome(ref_genome_path)
 
     for chrom in chromosomes:
-        chromosome = ref_genome[f"chr{chrom}"]
+        # Try both naming conventions: "chr7" and "7"
+        chrom_name = None
+        if f"chr{chrom}" in ref_genome:
+            chrom_name = f"chr{chrom}"
+        elif str(chrom) in ref_genome:
+            chrom_name = str(chrom)
+        else:
+            raise ValueError(f"Chromosome {chrom} not found in reference genome. Available chromosomes: {list(ref_genome.references)}")
+            
+        chromosome = ref_genome[chrom_name]
         for start in start_positions:
             seq = sample_valid_sequence(chromosome, start, sequence_length)
             sampled_sequences.append((chrom, start, seq))

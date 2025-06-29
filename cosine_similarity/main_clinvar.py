@@ -232,7 +232,6 @@ def main(args: argparse.Namespace) -> None:
     mutation_info = filter_tp53_clinvar_mutations(clinvar_data)
 
     model_names = [
-        "mistral",
         "nt_500m",
         "nt_50m",
         "dnabertv2",
@@ -267,18 +266,20 @@ def main(args: argparse.Namespace) -> None:
     print("=======================", "\n\n")
     print(results)
 
-    with Path("clinvar_results.pkl").open("wb") as f:
+    output_file = "clinvar_results.pkl"
+    with Path(output_file).open("wb") as f:
         pickle.dump(results, f)
+    print(f"Results saved to {output_file}")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--clinvar_file", type=str, default="./tp53_clinvar.csv")
-    parser.add_argument(
-        "--genome_file",
-        type=str,
-        default="/data/pretrain/genomics/hg38_reference/GCA_000001405.15_GRCh38_no_alt_plus_hs38d1_analysis_set.fna",
-    )
-    parser.add_argument("--tp53_fasta", type=str, default="./tp53.fasta")
+    parser.add_argument("--clinvar_file", type=str, required=True, 
+                       help="Path to the ClinVar CSV file")
+    parser.add_argument("--genome_file", type=str, 
+                       default="GCA_000001405.15_GRCh38_no_alt_plus_hs38d1_analysis_set.fna",
+                       help="Path to the reference genome file")
+    parser.add_argument("--tp53_fasta", type=str, required=True,
+                       help="Path to the TP53 FASTA file")
     args = parser.parse_args()
     main(args)
