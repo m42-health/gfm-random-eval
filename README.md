@@ -1,8 +1,10 @@
 <div align="center">
 
-# Genomic Foundationless Models: Pretraining Does Not Promise Performance
+# TOKENIZATION TO TRANSFER: DO GENOMIC FOUNDATION MODELS LEARN GOOD REPRESENTATIONS?
 
- [**Paper [bioRxiv]**](https://www.biorxiv.org/content/10.1101/2024.12.18.628606)
+ [**Paper [bioRxiv[]**](https://www.biorxiv.org/content/10.1101/2024.12.18.628606)](https://www.biorxiv.org/content/10.1101/2024.12.18.628606v3)
+
+**Update: Accepted to ICLR 2026!**
 
 **Authors:** Kirill Vishniakov, Karthik Viswanathan, Aleksandr Medvedev, Praveenkumar Kanithi, Marco AF Pimentel, Ronnie Rajan, Shadab Khan
 
