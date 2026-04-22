@@ -2,7 +2,7 @@
 
 # TOKENIZATION TO TRANSFER: DO GENOMIC FOUNDATION MODELS LEARN GOOD REPRESENTATIONS?
 
- [**Paper [bioRxiv[]**](https://www.biorxiv.org/content/10.1101/2024.12.18.628606)](https://www.biorxiv.org/content/10.1101/2024.12.18.628606v3)
+**Paper [bioRxiv](https://www.biorxiv.org/content/10.1101/2024.12.18.628606)**
 
 **Update: Accepted to ICLR 2026!**
 
