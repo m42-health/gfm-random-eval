@@ -11,6 +11,7 @@ import torch
 import transformers
 from Bio import SeqIO
 from sklearn.metrics.pairwise import cosine_similarity
+from scipy.stats import wilcoxon
 
 from cosine_similarity.models import load_model_and_tokenizer
 from cosine_similarity.utils import process_single_sequence, supported_pooling
@@ -255,6 +256,22 @@ def main(args: argparse.Namespace) -> None:
         results[model_name] = gene_result
         print(f"Finished processing gene for model: {model_name}")
 
+        pooling_types = set()
+        for chunk_info in gene_result:
+            for key in chunk_info.keys():
+                if key not in ["chunk_start", "chunk_end"]:
+                    pooling_types.add(key.rsplit("_", 1)[0])
+                    
+        for pt in pooling_types:
+            benign_sims = [c.get(f"{pt}_benign", 0) for c in gene_result if f"{pt}_benign" in c]
+            path_sims = [c.get(f"{pt}_pathogenic", 0) for c in gene_result if f"{pt}_pathogenic" in c]
+            if len(benign_sims) >= 2:
+                try:
+                    stat, pval = wilcoxon(benign_sims, path_sims)
+                    print(f"  {pt} - Wilcoxon p-value (Pathogenic vs Benign): {pval:.4e}")
+                except Exception as e:
+                    print(f"  {pt} - Wilcoxon test failed: {e}")
+                    
         for chunk_info in gene_result:
             print(f"Chunk {chunk_info['chunk_start']}-{chunk_info['chunk_end']}:")
             for key, sim in chunk_info.items():
